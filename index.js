@@ -22,7 +22,7 @@ app.use(
 app.use(express.json());
 
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET || "kambaz",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
 };
