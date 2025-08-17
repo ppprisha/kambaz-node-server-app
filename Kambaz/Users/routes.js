@@ -79,8 +79,16 @@ export default function UserRoutes(app) {
 
 
     app.post("/api/users", createUser);
-    app.get("/api/users", findAllUsers);
-    app.get("/api/users/:userId", findUserById);
+    app.get("/api/users", findAllUsers);app.get("/api/users/current/courses", (req, res) => {
+  const currentUser = req.session.currentUser;
+  if (!currentUser) {
+    res.sendStatus(401); 
+    return;
+  }
+  const courses = courseDao.findCoursesForEnrolledUser(currentUser._id);
+  res.json(courses);
+});
+pp.get("/api/users/:userId", findUserById);
     app.put("/api/users/:userId", updateUser);
     app.delete("/api/users/:userId", deleteUser);
     app.post("/api/users/signup", signup);

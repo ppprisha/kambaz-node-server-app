@@ -13,10 +13,9 @@ import EnrollmentsRoutes from './Kambaz/Enrollments/routes.js';
 const app = express();
 
 app.use(
-  cors({
-    origin: process.env.NETLIFY_URL, 
-    credentials: true,                
-  })
+    cors({
+        origin: process.env.NETLIFY_URL.replace(/\/$/, ""), credentials: true,
+    })
 );
 
 app.use(express.json());
@@ -28,11 +27,12 @@ const sessionOptions = {
   cookie: {
     sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
     secure: process.env.NODE_ENV === "development" ? false : true,
+    domain: process.env.NODE_ENV === "development" ? undefined : process.env.NODE_SERVER_DOMAIN,
   },
 };
 
 if (process.env.NODE_ENV !== "development") {
-  sessionOptions.proxy = true; 
+  sessionOptions.proxy = true;
 }
 
 app.use(session(sessionOptions));
@@ -46,5 +46,5 @@ Hello(app);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
