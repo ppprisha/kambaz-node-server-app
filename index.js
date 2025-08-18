@@ -12,7 +12,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.NETLIFY_URL || "http://localhost:5173",
+    origin: process.env.NETLIFY_URL,
     credentials: true, 
   })
 );
