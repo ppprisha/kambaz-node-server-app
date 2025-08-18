@@ -1,24 +1,22 @@
-import express from "express";
+import express from 'express';
+import Hello from "./Hello.js";
+import Lab5 from "./Lab5/index.js";
 import cors from "cors";
+import UserRoutes from "./Kambaz/Users/routes.js";
 import session from "express-session";
 import "dotenv/config";
-
-import UserRoutes from "./Kambaz/Users/routes.js";
 import CourseRoutes from "./Kambaz/Courses/routes.js";
+import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import AssignmentRoutes from "./Kambaz/Assignment/routes.js";
 import EnrollmentsRoutes from "./Kambaz/Enrollments/routes.js";
 
-const app = express();
 
-app.use(
-  cors({
-    origin: process.env.NETLIFY_URL,
-    credentials: true, 
-  })
-);
-
-app.use(express.json());
-
+const app = express()
+app.use(cors({
+    credentials: true,
+    origin: process.env.NETLIFY_URL || "http://localhost:5173",
+})
+); 
 const sessionOptions = {
     secret: process.env.SESSION_SECRET || "kambaz",
     resave: false,
@@ -32,12 +30,13 @@ const sessionOptions = {
       domain: process.env.NODE_SERVER_DOMAIN,
     };
   }
-app.use(session(sessionOptions));
-
+  app.use(session(sessionOptions));
+app.use(express.json());
+EnrollmentsRoutes(app);
 UserRoutes(app);
 CourseRoutes(app);
+ModuleRoutes(app);
 AssignmentRoutes(app);
-EnrollmentsRoutes(app);
-
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+Lab5(app)
+Hello(app)
+app.listen(process.env.PORT || 4000)
